@@ -4,7 +4,7 @@ process.env.NODE_ENV = 'test';
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require('../bin/www');
+let server = require(process.cwd() + '/bin/www');
 let should = chai.should();
 
 chai.use(chaiHttp);

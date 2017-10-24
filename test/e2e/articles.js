@@ -2,12 +2,12 @@
 process.env.NODE_ENV = 'test';
 
 let mongoose = require("mongoose");
-let Book = require('../libs/model/article');
+let Book = require(process.cwd() + '/libs/model/article');
 
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require('../bin/www');
+let server = require(process.cwd() + '/bin/www');
 let should = chai.should();
 
 chai.use(chaiHttp);
