@@ -9,7 +9,6 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-
 describe('Application', () => {
 
   describe('/api/oauth/token', () => {
