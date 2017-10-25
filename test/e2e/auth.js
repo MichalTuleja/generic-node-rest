@@ -4,12 +4,23 @@ process.env.NODE_ENV = 'test';
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require(process.cwd() + '/bin/www');
 let should = chai.should();
+
+let Book;
+
+let mongoose;
+let server;
 
 chai.use(chaiHttp);
 
 describe('Application', () => {
+
+  before(done => {
+    mongoose = require("mongoose");
+    Book = require(process.cwd() + '/libs/model/article')
+    server = require(process.cwd() + '/bin/www');
+    done();
+  });
 
   describe('/api/oauth/token', () => {
     it('should be able to reject invalid auth data', (done) => {
@@ -47,6 +58,12 @@ describe('Application', () => {
           done();
       });
     });
+  });
+
+  after(done => {
+    mongoose.disconnect();
+    server.close();
+    done();
   });
 
 });

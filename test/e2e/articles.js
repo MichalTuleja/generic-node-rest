@@ -4,13 +4,13 @@ process.env.NODE_ENV = 'test';
 const ITEM_LIMIT = '10';
 const PAGE_NUMBER = '3';
 
-let mongoose = require("mongoose");
-let Book = require(process.cwd() + '/libs/model/article');
+let mongoose;
+let Book;
+let server;
 
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require(process.cwd() + '/bin/www');
 let should = chai.should();
 
 chai.use(chaiHttp);
@@ -19,6 +19,13 @@ let access_token = '';
 
 
 describe('Articles', () => {
+
+  before(done => {
+    mongoose = require("mongoose");
+    Book = require(process.cwd() + '/libs/model/article');
+    server = require(process.cwd() + '/bin/www');
+    done();
+  });
 
   before((done) => {
     chai.request(server)
@@ -104,6 +111,12 @@ describe('Articles', () => {
             done();
           });
     });
+  });
+
+  after(done => {
+    mongoose.disconnect();
+    server.close();
+    done();
   });
 
 });
