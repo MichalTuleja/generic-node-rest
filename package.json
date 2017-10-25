@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha e2e/**/**.js"
+    "test": "mocha test/e2e/**/**.js"
   },
   "dependencies": {
     "body-parser": "~1.8.x",

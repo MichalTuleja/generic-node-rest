@@ -1,6 +1,9 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 
+const ITEM_LIMIT = '10';
+const PAGE_NUMBER = '3';
+
 let mongoose = require("mongoose");
 let Book = require(process.cwd() + '/libs/model/article');
 
@@ -13,6 +16,7 @@ let should = chai.should();
 chai.use(chaiHttp);
 
 let access_token = '';
+
 
 describe('Articles', () => {
 
@@ -39,17 +43,64 @@ describe('Articles', () => {
     });
   });
 
-
-
   describe('/GET articles', () => {
-    it('should be able to get with status 200 and empty array', (done) => {
+    it('should be able to get with status 200', (done) => {
       chai.request(server)
           .get('/api/articles')
           .set('authorization', `Bearer ${access_token}`)
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('array');
-            res.body.length.should.be.eql(1);
+            res.body.length.should.be.gte(1);
+            done();
+          });
+    });
+  });
+
+  describe(`/POST articles`, () => {
+    it(`should be able to get with status 200 exactly ${ITEM_LIMIT} articles`, (done) => {
+      let numberOfArticles = 
+      chai.request(server)
+          .post('/api/articles')
+          .set('authorization', `Bearer ${access_token}`)
+          .set('x-item-limit', ITEM_LIMIT)
+          .set('x-page-number', 0)
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            res.body.length.should.be.eql(10);
+            done();
+          });
+    });
+  });  
+
+  describe(`/GET ${ITEM_LIMIT} articles`, () => {
+    it(`should be able to get with status 200 exactly ${ITEM_LIMIT} articles`, (done) => {
+      chai.request(server)
+          .get('/api/articles')
+          .set('authorization', `Bearer ${access_token}`)
+          .set('x-item-limit', ITEM_LIMIT)
+          .set('x-page-number', 0)
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            res.body.length.should.be.eql(10);
+            done();
+          });
+    });
+  });
+
+  describe(`/GET ${ITEM_LIMIT} articles`, () => {
+    it(`should be able to get with status 200 exactly ${ITEM_LIMIT} articles with pagination`, (done) => {
+      chai.request(server)
+          .get('/api/articles')
+          .set('authorization', `Bearer ${access_token}`)
+          .set('x-item-limit', ITEM_LIMIT)
+          .set('x-page-number', PAGE_NUMBER)
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            res.body.length.should.be.eql(10);
             done();
           });
     });
