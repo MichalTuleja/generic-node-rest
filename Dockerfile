@@ -1,4 +1,6 @@
-FROM node:boron
+# last update 17:08
+
+FROM node:6-alpine
 
 WORKDIR /usr/src/app
 
