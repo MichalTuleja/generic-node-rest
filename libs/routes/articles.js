@@ -10,7 +10,10 @@ var Article = require(libs + 'model/article');
 
 router.get('/', passport.authenticate('bearer', { session: false }), function(req, res) {
 	
-	Article.find(function (err, articles) {
+	let limit = 10; // req.header['x-limit']
+	let skip = 10; // req.header['x-skip']
+
+	Article.find().sort({name: 'asc'}).skip(skip).limit(limit).exec(function (err, articles) {
 		if (!err) {
 			return res.json(articles);
 		} else {
