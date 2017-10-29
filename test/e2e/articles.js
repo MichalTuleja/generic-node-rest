@@ -1,8 +1,8 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 
-const ITEM_LIMIT = '10';
-const PAGE_NUMBER = '3';
+const ITEM_LIMIT = 10;
+const PAGE_NUMBER = 3;
 
 let mongoose;
 let Book;
@@ -64,22 +64,22 @@ describe('Articles', () => {
     });
   });
 
-  describe(`/POST articles`, () => {
-    it(`should be able to get with status 200 exactly ${ITEM_LIMIT} articles`, (done) => {
-      let numberOfArticles = 
-      chai.request(server)
-          .post('/api/articles')
-          .set('authorization', `Bearer ${access_token}`)
-          .set('x-item-limit', ITEM_LIMIT)
-          .set('x-page-number', 0)
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.body.should.be.a('array');
-            res.body.length.should.be.eql(10);
-            done();
-          });
-    });
-  });  
+  // describe(`/POST articles`, () => {
+  //   it(`should be able to get with status 200 exactly ${ITEM_LIMIT} articles`, (done) => {
+  //     let numberOfArticles = 
+  //     chai.request(server)
+  //         .post('/api/articles')
+  //         .set('authorization', `Bearer ${access_token}`)
+  //         .set('x-item-limit', ITEM_LIMIT)
+  //         .set('x-page-number', 1)
+  //         .end((err, res) => {
+  //           res.should.have.status(200);
+  //           res.body.should.be.a('array');
+  //           res.body.length.should.be.eql(ITEM_LIMIT);
+  //           done();
+  //         });
+  //   });
+  // });  
 
   describe(`/GET ${ITEM_LIMIT} articles`, () => {
     it(`should be able to get with status 200 exactly ${ITEM_LIMIT} articles`, (done) => {
@@ -91,7 +91,7 @@ describe('Articles', () => {
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('array');
-            res.body.length.should.be.eql(10);
+            res.body.length.should.be.eql(ITEM_LIMIT);
             done();
           });
     });
@@ -107,14 +107,14 @@ describe('Articles', () => {
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('array');
-            res.body.length.should.be.eql(10);
+            res.body.length.should.be.eql(ITEM_LIMIT);
             done();
           });
     });
   });
 
   after(done => {
-    mongoose.disconnect();
+    // mongoose.disconnect();
     server.close();
     done();
   });

@@ -61,7 +61,7 @@ describe('Application', () => {
   });
 
   after(done => {
-    mongoose.disconnect();
+    // mongoose.disconnect();
     server.close();
     done();
   });
