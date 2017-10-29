@@ -10,8 +10,11 @@ var Article = require(libs + 'model/article');
 
 router.get('/', passport.authenticate('bearer', { session: false }), function(req, res) {
 	
-	let limit = 10; // req.header['x-limit']
-	let skip = 10; // req.header['x-skip']
+	let limit = parseInt(req.headers['x-item-limit']);
+	let skip = parseInt(req.headers['x-page-number']);
+
+	limit = (!Number.isNaN(limit) && typeof limit === 'number') ? limit : 10;
+	skip  = (!Number.isNaN(skip) && typeof skip === 'number') ? skip : 0;
 
 	Article.find().sort({name: 'asc'}).skip(skip).limit(limit).exec(function (err, articles) {
 		if (!err) {
