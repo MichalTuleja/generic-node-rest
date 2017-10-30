@@ -1,12 +1,13 @@
-var express = require('express');
-var passport = require('passport');
-var router = express.Router();
+const libs = process.cwd() + '/libs/';
+const log = require(libs + 'log')(module);
 
-var libs = process.cwd() + '/libs/';
-var log = require(libs + 'log')(module);
+const express = require('express');
+const passport = require('passport');
+const router = express.Router();
+const CacheService = require(libs + '/services/CacheService');
 
-var db = require(libs + 'db/mongoose');
-var Article = require(libs + 'model/article');
+const db = require(libs + 'db/mongoose');
+const Article = require(libs + 'model/article');
 
 router.get('/', passport.authenticate('bearer', { session: false }), function(req, res) {
 	
@@ -16,16 +17,26 @@ router.get('/', passport.authenticate('bearer', { session: false }), function(re
 	limit = (!Number.isNaN(limit) && typeof limit === 'number') ? limit : 10;
 	skip  = (!Number.isNaN(skip) && typeof skip === 'number') ? skip : 0;
 
-	Article.find().sort({name: 'asc'}).skip(skip).limit(limit).exec(function (err, articles) {
-		if (!err) {
-			return res.json(articles);
-		} else {
-			res.statusCode = 500;
-			
-			log.error('Internal error(%d): %s',res.statusCode,err.message);
-			
-			return res.json({ 
-				error: 'Server error' 
+	let cacheKey = `${skip}-${limit}`;
+	getFromCache(cacheKey).then((data) => {
+		if(data) {
+			res.set('x-cached', 'true');
+			res.json(data);
+		}
+		else {
+			Article.find().sort({name: 'asc'}).skip(skip).limit(limit).exec(function (err, articles) {
+				if (!err) {
+					storeInCache(cacheKey, articles);
+					res.json(articles);
+				} else {
+					res.statusCode = 500;
+					
+					log.error('Internal error(%d): %s',res.statusCode,err.message);
+					
+					res.json({
+						error: 'Server error' 
+					});
+				}
 			});
 		}
 	});
@@ -138,3 +149,39 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
 });
 
 module.exports = router;
+
+
+/*
+ In these two functions we don't care about failures.
+ The backend will be significantly slower, but it _has_ to return the results.
+*/
+
+function getFromCache(key) {
+	return new Promise(resolve => {
+		CacheService.fetch(key).then((data) => {
+			if(data !== null) {
+				log.info(`Found ${key} in cache`);
+				resolve(data);
+			}
+			else {
+				log.info(`Missing ${key} in cache, fetching from DB`);
+				resolve(null);
+			}
+		}).catch((err) => { 
+			log.warn(err);
+			resolve(null);
+		});
+	});
+
+};
+
+function storeInCache(key, value, ttl) {
+	return new Promise(resolve => {
+		CacheService.store(key, value, ttl).then(res => {
+			resolve();
+		}).catch((err) => { 
+			log.warn(err);
+			resolve();
+		});
+	});
+}

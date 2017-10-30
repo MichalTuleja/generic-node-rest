@@ -6,6 +6,9 @@
     "mongoose": {
         "uri": "mongodb://mongo/apiDB"
     },
+    "redis": {
+        "uri": "redis://redis:6379"
+    },
     "default": {
         "api": {
             "version" : "v1"

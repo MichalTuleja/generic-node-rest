@@ -11,7 +11,6 @@ require(libs + 'auth/auth');
 var config = require('./config');
 var log = require('./log')(module);
 var oauth2 = require('./auth/oauth2');
-var cacheMidddleware = require('./middleware/cache');
 
 var api = require('./routes/api');
 var users = require('./routes/users');
@@ -22,7 +21,7 @@ var CacheService = require('./services/CacheService');
 var app = express();
 
 CacheService.init({
-    url: 'redis://redis:6379'
+    url: config.get('redis:uri')
 });
 
 app.use(bodyParser.json());
@@ -30,7 +29,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(methodOverride());
 app.use(passport.initialize());
-app.use(cacheMidddleware);
 
 app.use('/', api);
 app.use('/api', api);
