@@ -32,6 +32,7 @@ $ docker run -d \
   --link <your_redis_container>:redis \
   --link <your_mongo_container>:mongo \
   --name jdl-backend \
+  -p 1337:1337
   jdl-backend
 ```
 
