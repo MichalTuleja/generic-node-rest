@@ -65,7 +65,7 @@ describe('Articles', () => {
   });
 
   describe(`/POST articles`, () => {
-    it(`should be able to get with status 200 exactly ${ITEM_LIMIT} articles`, (done) => {
+    it(`should be able to write an article to the db`, (done) => {
       let article = { 
         title: 'test_title',
         author: 'Test Author',
