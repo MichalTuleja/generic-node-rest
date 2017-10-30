@@ -15,13 +15,14 @@
     "express": "~4.10.x",
     "faker": "^2.0.x",
     "method-override": "^2.3.x",
-    "mongoose": "^4.4.x",
+    "mongoose": "^4.12.5",
     "nconf": "^0.6.x",
     "oauth2orize": "^1.0.x",
     "passport": "^0.2.x",
     "passport-http": "^0.2.x",
     "passport-http-bearer": "^1.0.x",
     "passport-oauth2-client-password": "^0.1.x",
+    "redis": "^2.8.0",
     "winston": "^0.8.x"
   },
   "jshintConfig": {

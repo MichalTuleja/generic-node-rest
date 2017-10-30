@@ -5,7 +5,9 @@ var libs = process.cwd() + '/libs/';
 var log = require(libs + 'log')(module);
 var config = require(libs + 'config');
 
-mongoose.connect(config.get('mongoose:uri'));
+mongoose.Promise = Promise;
+
+mongoose.connect(config.get('mongoose:uri'), { useMongoClient: true });
 
 var db = mongoose.connection;
 
